@@ -18,15 +18,15 @@ func index(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, payload)
 }
 
-type addUserPayload struct {
+type addUserRequestPayload struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Email     string `json:"email"`
 }
 
 type addUserJsonResponse struct {
-	Message string         `json:"message"`
-	Data    addUserPayload `json:"data"`
+	Message string                `json:"message"`
+	Data    addUserRequestPayload `json:"data"`
 }
 
 type User struct {
@@ -38,7 +38,7 @@ type User struct {
 var users map[string]User = make(map[string]User)
 
 func createUser(w http.ResponseWriter, r *http.Request) {
-	var reqData addUserPayload
+	var reqData addUserRequestPayload
 	readJSON(r, &reqData)
 	switch {
 	case reqData.FirstName == "":
@@ -94,6 +94,30 @@ func fetchUserByEmail(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
+type echoPayload struct {
+	Message string `json:"message"`
+}
+
+func echo(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != "GET" {
+		errorJSON(w, nil, http.StatusNotFound)
+		return
+	}
+
+	msg := r.URL.Query().Get("msg")
+	if msg == "" {
+		errorJSON(w, nil, http.StatusBadRequest)
+		return
+	}
+	payload := echoPayload{
+		Message: msg,
+	}
+	writeJSON(w, payload, http.StatusAccepted)
+
+}
+
 func addUser(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
@@ -102,9 +126,5 @@ func addUser(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		fetchUserByEmail(w, r)
 	}
-	// if r.Method != "POST" {
-	// 	errorJSON(w, nil, http.StatusNotFound)
-	// 	return
-	// }
 
 }
