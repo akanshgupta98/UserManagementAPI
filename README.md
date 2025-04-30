@@ -27,14 +27,48 @@ This is a basic User Management API built using Go’s standard `net/http` libra
 
 ### 🧾 Example Usage
 
-#### 🔹 GET `/user`
-- Returns a sample user:
+#### 🔹 GET `/user?email=akansh.gupta@example.com`
+- Fetches the user by email and returns user data:
 ```json
 {
   "firstname": "Akansh",
   "lastname": "Gupta",
   "email": "akansh.gupta@example.com"
 }
+```
+#### 🔹 POST /user
+- Creates the user:
+  Payload:
+```json
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com"
+}
+```
+  Response:
+```json
+{
+  "message": "User created successfully",
+  "data": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com"
+  }
+}
+```
 
-### You can also fetch a user by email:
-GET /user?email=someone@example.com
+#### 🔹 Get /echo?msg=hello
+- Returns the same message
+- Response:
+```json
+{
+  "message": "hello"
+}
+```
+
+
+
+
+
+  
